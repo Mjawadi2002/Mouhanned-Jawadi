@@ -153,3 +153,9 @@
   background-color: #f39c12;
   color: black;
 }
+
+.card{
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
+  padding: 20px;
+}
