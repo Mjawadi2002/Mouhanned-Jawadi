@@ -1,14 +1,28 @@
 {
   "files": {
-    "main.css": "/static/css/main.51075c6a.css",
-    "main.js": "/static/js/main.f9d398ed.js",
+    "main.css": "/static/css/main.64aeed9a.css",
+    "main.js": "/static/js/main.2fa1a17a.js",
+    "static/media/tunis2.jpg": "/static/media/tunis2.22f78e4d68b80841af60.jpg",
+    "static/media/tunis3.jpg": "/static/media/tunis3.658cf460ce18583e0811.jpg",
+    "static/media/tunis1.jpg": "/static/media/tunis1.431a7da6b02bd69234ed.jpg",
     "static/media/dark.mp4": "/static/media/dark.062666af034ebf974ff2.mp4",
+    "static/media/cv.pdf": "/static/media/cv.dbad194b05adf8289d96.pdf",
+    "static/media/tunis.jpg": "/static/media/tunis.96dbd9f1dc5714faa110.jpg",
+    "static/media/instagram.png": "/static/media/instagram.2c2676ffe9cf327d1458.png",
+    "static/media/profileimage.png": "/static/media/profileimage.22d81c678b65382228cf.png",
+    "static/media/personel.jpg": "/static/media/personel.0aceffacbd2d32dc8a26.jpg",
+    "static/media/kef.jpg": "/static/media/kef.32fc2e505803849b583e.jpg",
+    "static/media/bizerte.jpg": "/static/media/bizerte.4074312d807e1b8639b6.jpg",
+    "static/media/erp.jpeg": "/static/media/erp.2702fb14eeafd5d207c2.jpeg",
+    "static/media/mobile.jpeg": "/static/media/mobile.e09c497df48ad5c0dcbc.jpeg",
+    "static/media/web.jpeg": "/static/media/web.8dc10f16431ec1c0562d.jpeg",
+    "static/media/facebook.png": "/static/media/facebook.7a0040e84b8a48dd20bd.png",
     "index.html": "/index.html",
-    "main.51075c6a.css.map": "/static/css/main.51075c6a.css.map",
-    "main.f9d398ed.js.map": "/static/js/main.f9d398ed.js.map"
+    "main.64aeed9a.css.map": "/static/css/main.64aeed9a.css.map",
+    "main.2fa1a17a.js.map": "/static/js/main.2fa1a17a.js.map"
   },
   "entrypoints": [
-    "static/css/main.51075c6a.css",
-    "static/js/main.f9d398ed.js"
+    "static/css/main.64aeed9a.css",
+    "static/js/main.2fa1a17a.js"
   ]
 }
