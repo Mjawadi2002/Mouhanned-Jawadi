@@ -7,6 +7,8 @@ import Gallery from './Gallery';
 import Contact from './Contact';
 import Projects from './Projects';
 import Video from './Video';
+import TunisSlider from './TunisSlider';
+
 
 function App() {
   return (
@@ -19,6 +21,9 @@ function App() {
           <Route path='/gallery' element={<Gallery />} />
           <Route path='/contact' element={<Contact />} />
           <Route path='/projects' element={<Projects />} />
+          <Route path='/tunis' element={<TunisSlider />} />
+          
+       
         </Routes>
         <Footer />
       </div>

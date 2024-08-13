@@ -1,18 +1,37 @@
-/* Footer.css */
 .footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: transparent; /* You can adjust the color */
-    color: white;
-    text-align: center;
-    padding: 1rem 0;
-    z-index: 1000; /* Ensure the footer is above other content */
-  }
-  
-  .footer-text {
-    margin: 0;
-    font-size: 1rem;
-  }
-  
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  color: white;
+  text-align: center;
+  padding: 1rem 0; /* Reduced padding */
+  z-index: 1000;
+}
+
+.footer-text {
+  margin: 0;
+  font-size: 0.9rem; /* Slightly reduced font size */
+}
+
+.social-logo {
+  width: 25px; /* Reduced size of the social media logos */
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.feedback-input {
+  width: 100%;
+  padding: 0.3rem; /* Reduced padding */
+  border-radius: 5px;
+  border: none;
+  font-size: 0.9rem; /* Slightly reduced font size */
+  text-align: center;
+}
+
+.feedback-container {
+  display: flex;
+  align-items: center;
+}

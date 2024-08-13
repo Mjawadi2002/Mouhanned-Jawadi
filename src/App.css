@@ -109,7 +109,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: transparent; /* Black background */
+  background-color: transparent; /* Transparent background */
 }
 
 .name {
@@ -154,8 +154,67 @@
   color: black;
 }
 
+.social-media-section {
+  text-align: center;
+}
+
+.social-media-text {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.social-logo {
+  width: 40px;
+  height: 40px;
+  margin: 0 10px;
+}
+
+.feedback-container {
+  margin-top: 20px;
+}
+
+.feedback-input {
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  height: 40px;
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #f39c12;
+  border: none;
+  color: black;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.btn-primary:hover {
+  background-color: #e67e22;
+}
+
 .card{
   border-radius: 20px;
   background-color: rgba(255, 255, 255, 0.1); /* Transparent background */
   padding: 20px;
 }
+
+.slider-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh; /* Center the slider vertically */
+  background-color: rgba(255, 255, 255, 0.5); /* Transparent background */
+  padding: 20px;
+  border-radius: 20px; /* Border radius */
+}
+
+.carousel {
+  width: 50rem; /* Adjust the width as needed */
+  border-radius: 15px; /* Apply border-radius to the carousel */
+  overflow: hidden; /* Ensure images stay within the border radius */
+}
+
+
