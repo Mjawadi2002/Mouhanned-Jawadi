@@ -1,55 +1,66 @@
-import { useState } from 'react';
-import cv from './images/cv.pdf';
-import profileimage from './images/profileimage.png';
-import linkedinLogo from './images/linkedin.png';
-import facebookLogo from './images/facebook.png';
-import instagramLogo from './images/instagram.png';
+import { useState, useEffect } from 'react';
 
+const ROLES = ['Full-Stack Engineer', 'AI Systems Builder', 'Dev Lead'];
 
-export default function Home() {
-    const [showAbout, setShowAbout] = useState(false);
+export default function Hero() {
+  const [roleIdx, setRoleIdx] = useState(0);
+  const [text, setText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [visible, setVisible] = useState(false);
 
-    const handleNameClick = () => {
-        setShowAbout(!showAbout);
-    };
+  useEffect(() => { setTimeout(() => setVisible(true), 100); }, []);
 
-    return (
-        <div className="home-container">
-            <h1 className="name" onClick={handleNameClick}>Welcome to my portfolio</h1>
-            {showAbout && (
-                <div className="about-section">
-                    <img src={profileimage} alt="Mouhanend Jawadi" className="profile-image" />
+  useEffect(() => {
+    const current = ROLES[roleIdx];
+    let t;
+    if (!deleting && text.length < current.length) {
+      t = setTimeout(() => setText(current.slice(0, text.length + 1)), 80);
+    } else if (!deleting && text.length === current.length) {
+      t = setTimeout(() => setDeleting(true), 2200);
+    } else if (deleting && text.length > 0) {
+      t = setTimeout(() => setText(current.slice(0, text.length - 1)), 45);
+    } else if (deleting && text.length === 0) {
+      setDeleting(false);
+      setRoleIdx((roleIdx + 1) % ROLES.length);
+    }
+    return () => clearTimeout(t);
+  }, [text, deleting, roleIdx]);
 
-                    <a href={cv} download className="cv-download">Download My CV</a>
-                    
-                    <div className='social-media-section container-fluid mt-3'>
-                        <p className='social-media-text'>Connect with me on my social media profiles:</p>
-                        <div className='row'>
-                            <div className='col-md-4'>
-                                <a href="https://www.linkedin.com/mynetwork/grow/" target="_blank" rel="noopener noreferrer">
-                                    <img src={linkedinLogo} alt="LinkedIn" className="social-logo" />
-                                </a>
-                            </div>
-                            <div className='col-md-4'>
-                                <a href="https://www.facebook.com/profile.php?id=100083750044161" target="_blank" rel="noopener noreferrer">
-                                    <img src={facebookLogo} alt="Facebook" className="social-logo" />
-                                </a>
-                            </div>
-                            <div className='col-md-4'>
-                                <a href="https://www.instagram.com/mouhanned_jaouedi/?hl=fr" target="_blank" rel="noopener noreferrer">
-                                    <img src={instagramLogo} alt="Instagram" className="social-logo" />
-                                </a>
-                            </div>
-                        </div>
-                        <div className='row'>
-                            <div className="feedback-container d-flex justify-content-center align-items-center">
-                                <input type="text" className="feedback-input" placeholder="Give your feedback" />
-                                <button className="btn btn-primary " style={{width:"100px"}}>Send</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+  const scroll = (e, id) => {
+    e.preventDefault();
+    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  return (
+    <section id="hero" className="hero">
+      <div className="hero-grid" />
+      <div className="hero-glow" />
+      <div className="container">
+        <div className={`hero-content${visible ? ' visible' : ''}`}>
+          <p className="hero-label">Based in Tunis, Tunisia</p>
+          <h1 className="hero-name">
+            Mouhanned<br />
+            <span className="accent">Jawadi</span>
+          </h1>
+          <p className="hero-tagline">"I don't just write features. I own the architecture, the infra, and the outcome."</p>
+          <div className="hero-role">
+            <span className="accent">&gt;</span>
+            <span>{text}</span>
+            <span className="cursor-blink">_</span>
+          </div>
+          <p className="hero-desc">
+            Software engineer who architects systems, owns infrastructure, and writes production code end to end — web, desktop, and AI-integrated.
+          </p>
+          <div className="hero-actions">
+            <a href="#projects" className="btn-primary" onClick={(e) => scroll(e, '#projects')}>View My Work</a>
+            <a href="#contact" className="btn-ghost" onClick={(e) => scroll(e, '#contact')}>Get in Touch</a>
+          </div>
         </div>
-    );
+      </div>
+      <div className="hero-scroll">
+        <span className="scroll-label">scroll</span>
+        <div className="scroll-line" />
+      </div>
+    </section>
+  );
 }

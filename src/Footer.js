@@ -1,13 +1,10 @@
-import './Footer.css'; // Ensure this file contains the appropriate CSS
-
 export default function Footer() {
   return (
     <footer className="footer">
-   
-            <p className="footer-text " >
-            &copy; 2024 All rights reserved to Mouhanned Jawadi
-             </p>
-          
+      <div className="container footer-inner">
+        <span className="footer-brand">MJ<span className="accent">.</span></span>
+        <span className="footer-copy">© 2026 Mouhanned Jawadi — Tunis, Tunisia</span>
+      </div>
     </footer>
   );
 }

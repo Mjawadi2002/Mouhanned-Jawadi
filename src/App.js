@@ -1,33 +1,41 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import Footer from './Footer';
+import { useEffect } from 'react';
+import './index.css';
+import Cursor from './Cursor';
 import Header from './Header';
-import Home from './Home';
-import Gallery from './Gallery';
-import Contact from './Contact';
+import Hero from './Home';
+import About from './About';
+import Experience from './Experience';
 import Projects from './Projects';
-import Video from './Video';
-import TunisSlider from './TunisSlider';
-
+import Skills from './Skills';
+import Certifications from './Certifications';
+import Contact from './Contact';
+import Footer from './Footer';
 
 function App() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('in-view'); }),
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.fade-up').forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <Router>
-      <div className="App">
-        <Header />
-        <Video />
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/gallery' element={<Gallery />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path='/projects' element={<Projects />} />
-          <Route path='/tunis' element={<TunisSlider />} />
-          
-       
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <div className="App">
+      <Cursor />
+      <Header />
+      <main>
+        <Hero />
+        <About />
+        <Experience />
+        <Projects />
+        <Skills />
+        <Certifications />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
   );
 }
 
