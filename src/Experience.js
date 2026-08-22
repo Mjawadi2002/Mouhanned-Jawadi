@@ -8,6 +8,7 @@ const EXPERIENCES = [
     period: 'July 2025 – Present',
     stack: ['React', 'Angular', 'FastAPI', 'PostgreSQL', 'Redis', 'Electron', 'Node.js', 'LLMs', 'RAG', 'Docker'],
     featured: true,
+    current: true,
     bullets: [
       'Schema design and query optimization across PostgreSQL and MongoDB',
       'DNS configuration, cloud hosting, CI/CD pipelines',
@@ -93,41 +94,51 @@ export default function Experience() {
       <div className="container">
         <span className="section-label fade-up">03 — Experience</span>
         <h2 className="section-title fade-up fade-up-d1">Where I've Shipped</h2>
-        <div className="exp-list">
+        <div className="roadmap">
           {EXPERIENCES.map((exp) => (
-            <div key={exp.id} className={`exp-card fade-up${exp.featured ? ' exp-featured' : ''}`}>
-              <div
-                className="exp-card-header"
-                onClick={() => exp.projects && setExpanded(expanded === exp.id ? null : exp.id)}
-              >
-                <div className="exp-left">
-                  <div className="exp-dot" />
-                  <div>
-                    <div className="exp-company">{exp.company}</div>
-                    <div className="exp-role">{exp.role}</div>
+            <div key={exp.id} className="roadmap-item fade-up">
+              <div className="roadmap-marker">
+                <div className={`roadmap-dot${exp.current ? ' roadmap-dot-current' : ''}`} />
+                <div className="roadmap-line" />
+              </div>
+              <div className="roadmap-content">
+                <div className={`exp-card${exp.featured ? ' exp-featured' : ''}`}>
+                  <div
+                    className="exp-card-header"
+                    onClick={() => exp.projects && setExpanded(expanded === exp.id ? null : exp.id)}
+                  >
+                    <div className="exp-left">
+                      <div>
+                        <div className="exp-company">
+                          {exp.company}
+                          {exp.current && <span className="exp-current-tag">Current</span>}
+                        </div>
+                        <div className="exp-role">{exp.role}</div>
+                      </div>
+                    </div>
+                    <div className="exp-right">
+                      <span className="exp-period">{exp.period}</span>
+                      {exp.projects && (
+                        <span className="exp-expand">{expanded === exp.id ? '− collapse' : '+ details'}</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="exp-right">
-                  <span className="exp-period">{exp.period}</span>
-                  {exp.projects && (
-                    <span className="exp-expand">{expanded === exp.id ? '− collapse' : '+ details'}</span>
+                  <div className="stack-badges" style={{ marginTop: '0.85rem' }}>
+                    {exp.stack.map((t) => <span key={t} className="badge">{t}</span>)}
+                  </div>
+                  <ul className="exp-bullets">
+                    {exp.bullets.map((b, i) => <li key={i}>{b}</li>)}
+                  </ul>
+                  {exp.projects && expanded === exp.id && (
+                    <div className="exp-projects-wrap">
+                      <span className="section-label">Featured Projects</span>
+                      <div className="exp-projects-grid">
+                        {exp.projects.map((p) => <ProjectCard key={p.name} p={p} />)}
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
-              <div className="stack-badges" style={{ marginTop: '0.85rem' }}>
-                {exp.stack.map((t) => <span key={t} className="badge">{t}</span>)}
-              </div>
-              <ul className="exp-bullets">
-                {exp.bullets.map((b, i) => <li key={i}>{b}</li>)}
-              </ul>
-              {exp.projects && expanded === exp.id && (
-                <div className="exp-projects-wrap">
-                  <span className="section-label">Featured Projects</span>
-                  <div className="exp-projects-grid">
-                    {exp.projects.map((p) => <ProjectCard key={p.name} p={p} />)}
-                  </div>
-                </div>
-              )}
             </div>
           ))}
         </div>

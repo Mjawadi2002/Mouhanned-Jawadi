@@ -7,7 +7,7 @@ const PROJECTS = [
     featured: true,
     badge: 'Dev Lead · Production',
     github: null,
-    live: null,
+    live: 'https://saleside.ai',
   },
   {
     id: 'midrollpro',
@@ -17,37 +17,47 @@ const PROJECTS = [
     featured: true,
     badge: 'Architect · Live',
     github: null,
-    live: null,
+    live: 'https://www.midrollpro.com',
   },
   {
-    id: 'music',
-    title: 'Music Genre Classifier',
-    desc: '86% accuracy genre classification using VGG19 deep learning. Containerized microservices — Flask backend, React frontend, fully Dockerized.',
-    stack: ['Flask', 'React', 'Python', 'VGG19', 'SVM', 'Docker'],
-    featured: false,
-    badge: '86% Accuracy',
-    github: 'https://github.com/Mjawadi2002',
-    live: null,
+    id: 'rankode',
+    title: 'Rankode',
+    desc: 'Competitive ranked coding platform with 1v1 live duels across 10 subject tracks, Glicko-2 matchmaking, AI tutoring (Sensei), and mock interview prep (SCREEN). Judge0-powered live code arena with real-time multiplayer, shipped across Electron, Expo, and Next.js.',
+    stack: ['Electron', 'React', 'Vite', 'Fastify', 'Socket.IO', 'Judge0'],
+    featured: true,
+    badge: 'Live',
+    github: null,
+    live: 'https://rankode.app',
   },
   {
-    id: 'erp',
-    title: 'ERP Desktop App',
-    desc: 'Cross-platform desktop ERP for inventory and sales management. MERN stack on Electron with full UML-designed architecture before implementation.',
-    stack: ['Electron', 'React', 'MongoDB', 'Express.js', 'Node.js'],
-    featured: false,
-    badge: '2024',
-    github: 'https://github.com/Mjawadi2002/ERP-desktop-application',
-    live: null,
+    id: 'portico',
+    title: 'Portico',
+    desc: 'Operations SaaS for small agencies with three-tier auth (owner/employee/client), a zero-knowledge encrypted vault, and an AI agent with tool-calling. Visual automations, Kanban tasks, a client portal, and a floating Panel widget for quick access.',
+    stack: ['NestJS', 'React', 'Vite', 'Electron', 'TypeORM', 'PostgreSQL'],
+    featured: true,
+    badge: 'Live',
+    github: null,
+    live: 'https://portico-front-production.up.railway.app/',
   },
   {
-    id: 'movie',
-    title: 'Movie Matchr',
-    desc: 'Mood-based and content-based movie recommendation engine. Flask REST API connected to MongoDB with personalized suggestions based on user preferences.',
-    stack: ['React', 'Flask', 'MongoDB', 'Python', 'ML'],
+    id: 'tawelti',
+    title: 'Tawelti',
+    desc: 'QR digital menu and loyalty SaaS for Tunisian cafés. Offline-first architecture with dual-path ordering over local WiFi and cellular cloud.',
+    stack: ['Electron', 'SQLite', 'MongoDB', 'Railway'],
     featured: false,
-    badge: '2024',
-    github: 'https://github.com/Mjawadi2002/Mouhanned-Jawadi',
-    live: null,
+    badge: 'Live',
+    github: null,
+    live: 'https://www.tawelti.online',
+  },
+  {
+    id: 'teamyy',
+    title: 'Teamyy',
+    desc: 'All-in-one workspace product with an AES-256-GCM encrypted vault, a recruiting module, and a marketing pipeline built for a YC application.',
+    stack: ['React', 'Node.js', 'Electron', 'Socket.IO'],
+    featured: false,
+    badge: 'Live',
+    github: null,
+    live: 'https://www.teamyy.org',
   },
 ];
 
@@ -71,19 +81,13 @@ function Card({ p }) {
 }
 
 export default function Projects() {
-  const featured = PROJECTS.filter((p) => p.featured);
-  const regular = PROJECTS.filter((p) => !p.featured);
-
   return (
     <section id="projects" className="section">
       <div className="container">
         <span className="section-label fade-up">04 — Projects</span>
         <h2 className="section-title fade-up fade-up-d1">Things I've Built</h2>
-        <div className="projects-featured fade-up fade-up-d2">
-          {featured.map((p) => <Card key={p.id} p={p} />)}
-        </div>
-        <div className="projects-regular fade-up fade-up-d3">
-          {regular.map((p) => <Card key={p.id} p={p} />)}
+        <div className="projects-grid fade-up fade-up-d2">
+          {PROJECTS.map((p) => <Card key={p.id} p={p} />)}
         </div>
       </div>
     </section>

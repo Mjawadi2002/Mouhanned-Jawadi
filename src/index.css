@@ -419,9 +419,48 @@ a, button { cursor: none; }
 }
 
 /* ============================================================
-   EXPERIENCE
+   EXPERIENCE — ROADMAP
    ============================================================ */
-.exp-list { display: flex; flex-direction: column; gap: 1.25rem; }
+.roadmap { display: flex; flex-direction: column; }
+
+.roadmap-item { display: flex; gap: 1.5rem; align-items: stretch; }
+
+.roadmap-marker {
+  display: flex; flex-direction: column; align-items: center;
+  flex-shrink: 0; width: 16px;
+}
+
+.roadmap-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  background: var(--bg2); border: 2px solid var(--accent);
+  margin-top: 1.9rem; flex-shrink: 0;
+  position: relative; z-index: 1;
+  transition: background 0.2s ease;
+}
+
+.roadmap-dot.roadmap-dot-current {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-dim);
+}
+.roadmap-dot.roadmap-dot-current::after {
+  content: '';
+  position: absolute; inset: -5px;
+  border-radius: 50%; border: 1px solid var(--accent);
+  animation: roadmapPulse 2.2s ease-out infinite;
+}
+@keyframes roadmapPulse {
+  0% { transform: scale(0.7); opacity: 0.9; }
+  100% { transform: scale(2.1); opacity: 0; }
+}
+
+.roadmap-line {
+  width: 2px; flex: 1; min-height: 24px;
+  margin-top: 4px; margin-bottom: 4px;
+  background: linear-gradient(to bottom, var(--border) 0%, var(--border-subtle) 100%);
+}
+.roadmap-item:last-child .roadmap-line { display: none; }
+
+.roadmap-content { flex: 1; min-width: 0; padding-bottom: 1.5rem; }
 
 .exp-card {
   border: 1px solid var(--border-subtle);
@@ -441,15 +480,20 @@ a, button { cursor: none; }
   gap: 1rem; cursor: pointer;
 }
 
-.exp-left { display: flex; align-items: flex-start; gap: 0.9rem; }
+.exp-left { display: flex; align-items: flex-start; }
 
-.exp-dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: var(--accent); margin-top: 5px; flex-shrink: 0;
-  box-shadow: 0 0 12px var(--accent-glow);
+.exp-company {
+  font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.15rem;
+  display: flex; align-items: center; gap: 0.6rem;
 }
 
-.exp-company { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.15rem; }
+.exp-current-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-dim);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 2px 7px; font-weight: 500;
+}
 .exp-role { font-size: 0.875rem; color: var(--text-dim); }
 
 .exp-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.35rem; flex-shrink: 0; }
@@ -469,6 +513,12 @@ a, button { cursor: none; }
   .exp-card-header { flex-direction: column; gap: 0.5rem; }
 }
 
+@media (max-width: 560px) {
+  .roadmap-item { gap: 0.9rem; }
+  .roadmap-marker { width: 12px; }
+  .roadmap-dot { margin-top: 1.5rem; }
+}
+
 .exp-proj-card {
   background: var(--bg); border: 1px solid var(--border-subtle);
   border-radius: 8px; padding: 1.25rem;
@@ -484,19 +534,20 @@ a, button { cursor: none; }
 /* ============================================================
    PROJECTS
    ============================================================ */
-.projects-featured { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
-.projects-regular { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-
-@media (max-width: 900px) {
-  .projects-featured { grid-template-columns: 1fr; }
-  .projects-regular { grid-template-columns: 1fr 1fr; }
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 1.5rem;
 }
-@media (max-width: 600px) { .projects-regular { grid-template-columns: 1fr; } }
+
+@media (max-width: 900px) { .projects-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .projects-grid { grid-template-columns: 1fr; } }
 
 .proj-card {
   background: var(--bg2); border: 1px solid var(--border-subtle);
   border-radius: 12px; padding: 1.75rem;
-  display: flex; flex-direction: column; min-height: 240px;
+  display: flex; flex-direction: column; height: 100%; min-height: 280px;
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .proj-card:hover {
@@ -506,7 +557,7 @@ a, button { cursor: none; }
 }
 
 .proj-featured {
-  border-color: var(--border); min-height: 300px;
+  border-color: var(--border);
   background: linear-gradient(145deg, rgba(108, 99, 255, 0.04) 0%, var(--bg2) 60%);
 }
 
@@ -516,7 +567,10 @@ a, button { cursor: none; }
 .proj-link { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); text-decoration: none; transition: color 0.2s; }
 .proj-link:hover { color: var(--accent); }
 .proj-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
-.proj-desc { font-size: 0.875rem; color: var(--text-dim); line-height: 1.65; flex: 1; }
+.proj-desc {
+  font-size: 0.875rem; color: var(--text-dim); line-height: 1.65; flex: 1;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden;
+}
 
 /* ============================================================
    SKILLS
