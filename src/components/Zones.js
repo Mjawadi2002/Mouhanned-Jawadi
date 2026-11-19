@@ -3,6 +3,7 @@ import { ArrowUpRight, ArrowDown, Terminal as TerminalIcon, Trophy, Copy, Check,
 import { PROFILE, EDUCATION, EXPERIENCE, PROJECTS, SKILLS, CERTS, SIDE_QUESTS } from '../data';
 import { usePrefersReducedMotion, useDecode } from '../hooks';
 import { sfx } from '../sfx';
+import { unlock } from '../achievements';
 import portrait from '../images/profileimage.png';
 import camera from '../images/personel.jpg';
 
@@ -12,9 +13,7 @@ const shotCtx = require.context('../assets/shots', false, /\.jpg$/);
 const SHOTS = {};
 shotCtx.keys().forEach((k) => { SHOTS[k.replace('./', '').replace('.jpg', '')] = shotCtx(k); });
 
-const FACTS = {
-  rankode: [['10', 'subject tracks'], ['1v1', 'live duels'], ['Glicko-2', 'matchmaking']],
-};
+const FACTS = {};
 
 export function Decode({ text, as: Tag = 'span', className, delay = 0, id }) {
   const reduced = usePrefersReducedMotion();
@@ -79,7 +78,7 @@ export function About() {
       <div className="wrap about-grid">
         <figure className="card-id" data-rv>
           <div className="card-id-frame">
-            <img src={portrait} alt="Mouhanned Jawadi in a suit and glasses" width="503" height="496" loading="lazy" />
+            <img src={portrait} alt="Mouhanned Jawadi in a suit and glasses" width="503" height="496" loading="lazy" decoding="async" />
           </div>
           <figcaption>
             <strong>{PROFILE.name}</strong>
@@ -98,7 +97,7 @@ export function About() {
 
           <dl className="stats" data-rv>
             <div><dt>Roles held</dt><dd><CountUp to={4} /></dd></div>
-            <div><dt>Products built</dt><dd><CountUp to={6} /></dd></div>
+            <div><dt>Products built</dt><dd><CountUp to={PROJECTS.length} /></dd></div>
             <div><dt>Credentials</dt><dd><CountUp to={5} /></dd></div>
           </dl>
 
@@ -113,7 +112,7 @@ export function About() {
           </ul>
 
           <div className="quests" data-rv>
-            <img src={camera} alt="Mouhanned behind a camera on a tripod" width="933" height="1031" loading="lazy" />
+            <img src={camera} alt="Mouhanned behind a camera on a tripod" width="933" height="1031" loading="lazy" decoding="async" />
             <div>
               <h3 className="h4">Side quests</h3>
               <ul className="chips">
@@ -128,17 +127,17 @@ export function About() {
 }
 
 /* ------------------------------------------------------------ Experience */
-export function Experience() {
+export function Experience({ ui }) {
   const [active, setActive] = useState(EXPERIENCE[0].id);
   const refs = useRef({});
 
   useEffect(() => {
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.dataset.id); });
+      entries.forEach((e) => { if (e.isIntersecting) { setActive(e.target.dataset.id); if (ui) ui.current.mission = EXPERIENCE.findIndex((x) => x.id === e.target.dataset.id); } });
     }, { rootMargin: '-40% 0px -50% 0px' });
     Object.values(refs.current).forEach((el) => el && io.observe(el));
     return () => io.disconnect();
-  }, []);
+  }, [ui]);
 
   return (
     <section id="experience" className="zone xp" aria-labelledby="xp-title">
@@ -194,7 +193,7 @@ function Showcase({ p }) {
   return (
     <div className="shot" key={p.id}>
       {shot ? (
-        <img src={shot} alt={`${p.name} website, ${p.host}`} width="1280" height="800" loading="lazy" />
+        <img src={shot} alt={`${p.name} website, ${p.host}`} width="1280" height="800" loading="lazy" decoding="async" />
       ) : (
         <div className="shot-facts">
           <p className="shot-name">{p.name}</p>
@@ -210,12 +209,19 @@ function Showcase({ p }) {
   );
 }
 
-export function Projects() {
+export function Projects({ ui }) {
   const [sel, setSel] = useState(0);
   const p = PROJECTS[sel];
   const listRef = useRef(null);
+  const seen = useRef(new Set([0]));
 
-  const pick = (i) => { setSel(i); sfx.select(); };
+  const pick = (i) => {
+    setSel(i);
+    sfx.select();
+    if (ui) ui.current.project = i;
+    seen.current.add(i);
+    if (seen.current.size === PROJECTS.length) unlock('select');
+  };
   const onKey = (e) => {
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
     e.preventDefault();
@@ -296,15 +302,23 @@ export function Skills() {
 }
 
 /* ------------------------------------------------------------ Certifications */
-export function Certifications() {
+export function Certifications({ ui }) {
   return (
     <section id="certifications" className="zone certs" aria-labelledby="certs-title">
       <div className="wrap">
         <Decode as="h2" id="certs-title" className="h2" text="Credentials unlocked." />
         <ul className="cert-grid">
-          {CERTS.map((c) => (
+          {CERTS.map((c, i) => (
             <li key={c.name} data-rv>
-              <a href={c.link} target="_blank" rel="noopener noreferrer" onMouseEnter={() => sfx.tick()}>
+              <a
+                href={c.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onMouseEnter={() => { sfx.tick(); if (ui) ui.current.cert = i; }}
+                onFocus={() => { if (ui) ui.current.cert = i; }}
+                onMouseLeave={() => { if (ui) ui.current.cert = -1; }}
+                onBlur={() => { if (ui) ui.current.cert = -1; }}
+              >
                 <Trophy size={22} weight="duotone" aria-hidden="true" />
                 <span className="cert-body">
                   <span className="cert-issuer">{c.issuer}, {c.year}</span>
@@ -370,7 +384,7 @@ export function Contact() {
             </a>
           </li>
           <li>
-            <a href={PROFILE.resume} download="Mouhanned_Jawadi_Resume.pdf">
+            <a href={PROFILE.resume} download="Mouhanned_Jawadi_Resume.pdf" onClick={() => unlock('paper')}>
               <span className="cmd-prompt">$ resume</span>
               <span className="cmd-val"><DownloadSimple size={18} aria-hidden="true" /> Mouhanned_Jawadi_Resume.pdf</span>
             </a>

@@ -1,16 +1,22 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import World3D from './components/World3D';
 import Boot from './components/Boot';
 import HUD from './components/HUD';
-import Terminal from './components/Terminal';
+import { AchievementToast, AchievementPanel } from './components/Achievements';
+import { useAchievements, unlock } from './achievements';
 import { Hero, About, Experience, Projects, Skills, Certifications, Contact } from './components/Zones';
 import { ZONES } from './data';
 import { usePrefersReducedMotion } from './hooks';
 import { sfx } from './sfx';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// heavy pieces load in parallel with the boot screen, or only when first needed
+const World3D = lazy(() => import('./components/World3D'));
+const Terminal = lazy(() => import('./components/Terminal'));
+
+const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
 const MAX_DEPTH_M = 1800;
 
@@ -19,11 +25,16 @@ export default function App() {
   const [phase, setPhase] = useState('boot'); // boot -> world
   const [zone, setZone] = useState(0);
   const [termOpen, setTermOpen] = useState(false);
+  const [achOpen, setAchOpen] = useState(false);
+  const { count, toast, total } = useAchievements();
+  const visited = useRef(new Set([0]));
+  const konami = useRef(0);
 
   const progressRef = useRef(0);
   const gatesRef = useRef([]);
   const zoneRef = useRef(0);
   const introRef = useRef({ t: 0 });
+  const uiRef = useRef({ project: 0, mission: 0, cert: -1 });
   const depthRef = useRef(null);
   const barRef = useRef(null);
 
@@ -34,6 +45,7 @@ export default function App() {
 
   const dive = useCallback(() => {
     setPhase('world');
+    unlock('dive');
     gsap.to(introRef.current, { t: 1, duration: reduced ? 0.01 : 2.8, ease: 'none' });
   }, [reduced]);
 
@@ -74,7 +86,14 @@ export default function App() {
           start: 'top 55%',
           end: 'bottom 55%',
           onToggle: (self) => {
-            if (self.isActive) { zoneRef.current = i; setZone(i); }
+            if (self.isActive) {
+              zoneRef.current = i;
+              setZone(i);
+              visited.current.add(i);
+              if (visited.current.size === ZONES.length) unlock('descent');
+              try { window.history.replaceState(null, '', i === 0 ? window.location.pathname : `#${z.id}`); } catch (e) { /* ignore */ }
+              document.title = i === 0 ? 'Mouhanned Jawadi | Software Engineer, AI Systems' : `${z.label} | Mouhanned Jawadi`;
+            }
           },
         });
       });
@@ -98,9 +117,28 @@ export default function App() {
     };
   }, [phase, reduced]);
 
+  useEffect(() => { if (termOpen) unlock('shell'); }, [termOpen]);
+
+  // deep link: open straight to a zone after the dive when the URL has a hash
+  useEffect(() => {
+    if (phase !== 'world') return undefined;
+    const id = window.location.hash.replace('#', '');
+    if (!id || !ZONES.some((z) => z.id === id)) return undefined;
+    const t = setTimeout(() => goto(id), 1400);
+    return () => clearTimeout(t);
+  }, [phase, goto]);
+
   // keyboard: backtick / ctrl+k terminal, 1-7 teleport
   useEffect(() => {
     const onKey = (e) => {
+      if (phase === 'world') {
+        const want = KONAMI[konami.current];
+        const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        if (key === want) {
+          konami.current += 1;
+          if (konami.current === KONAMI.length) { konami.current = 0; unlock('konami'); uiRef.current.surge = 1; }
+        } else konami.current = key === KONAMI[0] ? 1 : 0;
+      }
       const t = e.target;
       const typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable);
       if ((e.key === '`' && !typing) || (e.key.toLowerCase() === 'k' && (e.ctrlKey || e.metaKey))) {
@@ -119,25 +157,33 @@ export default function App() {
   return (
     <div className="App">
       <a className="skip" href="#about">Skip to content</a>
-      <World3D progressRef={progressRef} gatesRef={gatesRef} zoneRef={zoneRef} introRef={introRef} reduced={reduced} />
+      <Suspense fallback={null}>
+        <World3D progressRef={progressRef} gatesRef={gatesRef} zoneRef={zoneRef} introRef={introRef} uiRef={uiRef} reduced={reduced} />
+      </Suspense>
       <div className="scrim" aria-hidden="true" />
 
       {phase === 'boot' && <Boot onEnter={dive} reduced={reduced} />}
 
       <div className={`stage${phase === 'world' ? ' is-live' : ''}`} aria-hidden={phase === 'boot'}>
-        <HUD zone={zone} onGoto={goto} onTerminal={() => setTermOpen(true)} depthRef={depthRef} barRef={barRef} />
+        <HUD zone={zone} onGoto={goto} onTerminal={() => setTermOpen(true)} onAchievements={() => setAchOpen(true)} achCount={count} achTotal={total} depthRef={depthRef} barRef={barRef} />
         <main>
           <Hero onGoto={goto} onTerminal={() => setTermOpen(true)} />
           <About />
-          <Experience />
-          <Projects />
+          <Experience ui={uiRef} />
+          <Projects ui={uiRef} />
           <Skills />
-          <Certifications />
+          <Certifications ui={uiRef} />
           <Contact />
         </main>
       </div>
 
-      <Terminal open={termOpen} onClose={() => setTermOpen(false)} onGoto={goto} />
+      {termOpen && (
+        <Suspense fallback={null}>
+          <Terminal open={termOpen} onClose={() => setTermOpen(false)} onGoto={goto} />
+        </Suspense>
+      )}
+      <AchievementToast toast={toast} />
+      <AchievementPanel open={achOpen} onClose={() => setAchOpen(false)} count={count} />
       <noscript><p className="noscript">This portfolio is an interactive 3D experience. Enable JavaScript to enter. Contact: mouhanned.j18@gmail.com</p></noscript>
     </div>
   );

@@ -20,6 +20,6 @@ npm run build    # production build into build/
 
 ## Controls
 
-- `` ` `` or `Ctrl+K` opens the terminal. Try `help`, `projects`, `open rankode`, `neofetch`.
+- `` ` `` or `Ctrl+K` opens the terminal. Try `help`, `projects`, `open portico`, `neofetch`.
 - Number keys `1` to `7` jump between zones.
 - Respects `prefers-reduced-motion`. Sound is off by default.

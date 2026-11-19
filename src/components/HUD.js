@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { Terminal as TerminalIcon, SpeakerHigh, SpeakerSlash, DownloadSimple } from '@phosphor-icons/react';
+import { Terminal as TerminalIcon, SpeakerHigh, SpeakerSlash, DownloadSimple, Trophy } from '@phosphor-icons/react';
 import { ZONES, PROFILE } from '../data';
 import { sfx } from '../sfx';
+import { unlock } from '../achievements';
 
-export default function HUD({ zone, onGoto, onTerminal, depthRef, barRef }) {
+export default function HUD({ zone, onGoto, onTerminal, onAchievements, achCount, achTotal, depthRef, barRef }) {
   const [sound, setSound] = useState(sfx.isOn());
   const [banner, setBanner] = useState(null);
   const first = useRef(true);
@@ -34,10 +35,13 @@ export default function HUD({ zone, onGoto, onTerminal, depthRef, barRef }) {
           <button type="button" className="btn btn-sm" onClick={onTerminal} aria-label="Open terminal, shortcut backtick">
             <TerminalIcon size={16} /> <span>Open terminal</span> <kbd>`</kbd>
           </button>
+          <button type="button" className="btn btn-sm" onClick={onAchievements} aria-label={`Achievements, ${achCount} of ${achTotal} unlocked`}>
+            <Trophy size={16} /> <span>{achCount}/{achTotal}</span>
+          </button>
           <button type="button" className="btn btn-sm btn-icon-lg" onClick={toggleSound} aria-pressed={sound} aria-label={sound ? 'Turn sound off' : 'Turn sound on'}>
             {sound ? <SpeakerHigh size={16} /> : <SpeakerSlash size={16} />}
           </button>
-          <a className="btn btn-sm btn-primary" href={PROFILE.resume} download="Mouhanned_Jawadi_Resume.pdf">
+          <a className="btn btn-sm btn-primary" href={PROFILE.resume} download="Mouhanned_Jawadi_Resume.pdf" onClick={() => unlock('paper')}>
             <DownloadSimple size={16} /> <span>Resume</span>
           </a>
         </nav>

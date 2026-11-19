@@ -2,10 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { X } from '@phosphor-icons/react';
 import { PROFILE, EXPERIENCE, PROJECTS, SKILLS, CERTS, ZONES, EDUCATION } from '../data';
 import { sfx } from '../sfx';
+import { ACHIEVEMENTS, isUnlocked, unlock } from '../achievements';
+import Duel, { SNIPPETS } from './Duel';
 
 const PROMPT = 'visitor@mouhanned.os:~$';
-const COMMANDS = ['help', 'about', 'neofetch', 'experience', 'projects', 'open', 'skills', 'certs', 'contact', 'resume', 'goto', 'clear', 'exit'];
-const ALIASES = { whoami: 'about', ls: 'projects', xp: 'experience', cv: 'resume', cd: 'goto', man: 'help', '?': 'help', quit: 'exit', close: 'exit', mail: 'contact', email: 'contact', certifications: 'certs', stack: 'skills' };
+const COMMANDS = ['help', 'about', 'neofetch', 'experience', 'projects', 'open', 'skills', 'certs', 'contact', 'resume', 'duel', 'achievements', 'goto', 'clear', 'exit'];
+const ALIASES = { whoami: 'about', ls: 'projects', xp: 'experience', cv: 'resume', cd: 'goto', man: 'help', '?': 'help', quit: 'exit', close: 'exit', mail: 'contact', email: 'contact', certifications: 'certs', stack: 'skills', play: 'duel', ach: 'achievements', trophies: 'achievements' };
 
 const LOGO = String.raw` __  __      _
 |  \/  |    | |
@@ -29,6 +31,7 @@ export default function Terminal({ open, onClose, onGoto }) {
   const [history, setHistory] = useState([]);
   const [value, setValue] = useState('');
   const [cursor, setCursor] = useState(-1);
+  const [duel, setDuel] = useState(null);
   const inputRef = useRef(null);
   const bodyRef = useRef(null);
   const returnFocus = useRef(null);
@@ -46,7 +49,7 @@ export default function Terminal({ open, onClose, onGoto }) {
 
   useEffect(() => {
     if (bodyRef.current) bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
-  }, [history, open]);
+  }, [history, open, duel]);
 
   const output = useCallback((cmd, args) => {
     switch (cmd) {
@@ -58,11 +61,13 @@ export default function Terminal({ open, onClose, onGoto }) {
               ['neofetch', 'system summary'],
               ['experience', 'where I have worked'],
               ['projects', 'everything I have built'],
-              ['open <name>', 'project details, for example: open rankode'],
+              ['open <name>', 'project details, for example: open portico'],
               ['skills', 'the tech stack'],
               ['certs', 'certifications'],
               ['contact', 'email and links'],
               ['resume', 'download the resume'],
+              ['duel', 'race Sensei in a typing duel'],
+              ['achievements', 'see what you have unlocked'],
               ['goto <zone>', 'jump the page to a zone'],
               ['clear', 'clear the screen'],
               ['exit', 'close the terminal'],
@@ -87,7 +92,7 @@ export default function Terminal({ open, onClose, onGoto }) {
               <Row k="role">Software Engineer at ETG</Row>
               <Row k="focus">AI products, RAG, full-stack, infrastructure</Row>
               <Row k="school">ENSIT, Computer Engineering</Row>
-              <Row k="shipped">SaleSide, MidrollPro, Rankode, Portico, Tawelti, Teamyy</Row>
+              <Row k="shipped">{PROJECTS.map((p) => p.name).join(', ')}</Row>
               <Row k="stack">React, Next.js, FastAPI, NestJS, PostgreSQL, Redis</Row>
               <Row k="status">{PROFILE.open}</Row>
             </div>
@@ -151,10 +156,26 @@ export default function Terminal({ open, onClose, onGoto }) {
         const a = document.createElement('a');
         a.href = PROFILE.resume;
         a.download = 'Mouhanned_Jawadi_Resume.pdf';
+        unlock('paper');
         document.body.appendChild(a);
         a.click();
         a.remove();
         return <p>Downloading the resume. If nothing happens, <a href={PROFILE.resume}>open it here</a>.</p>;
+      }
+      case 'achievements':
+        return (
+          <div className="t-block">
+            {ACHIEVEMENTS.map((a) => {
+              const done = isUnlocked(a.id);
+              return <Row key={a.id} k={done ? '[x]' : '[ ]'}>{done || !a.secret ? `${a.title}: ${a.text}` : 'Hidden. Keep exploring.'}</Row>;
+            })}
+          </div>
+        );
+      case 'duel': {
+        const target = SNIPPETS[Math.floor(Math.random() * SNIPPETS.length)];
+        const now = Date.now();
+        setDuel({ target, start: now + 1400, begun: now, cps: 3.6 + Math.random() * 1.2 });
+        return <p>Sensei accepted the duel. Get ready.</p>;
       }
       case 'goto': {
         const z = ZONES.find((x) => x.id === (args[0] || '').toLowerCase() || x.command === (args[0] || '').toLowerCase());
@@ -187,6 +208,7 @@ export default function Terminal({ open, onClose, onGoto }) {
           <p>Good call. Start the conversation: <a href={`mailto:${PROFILE.email}?subject=Let%27s%20work%20together`}>{PROFILE.email}</a></p>
         </div>
       );
+      unlock('hire');
       sfx.select();
     } else {
       cmd = ALIASES[cmd] || cmd;
@@ -201,8 +223,37 @@ export default function Terminal({ open, onClose, onGoto }) {
     setHistory((h) => [...h, { id: `${Date.now()}-${Math.random()}`, cmd: trimmed, out }]);
   }, [onClose, output]);
 
+  const push = useCallback((cmd, out) => setHistory((h) => [...h, { id: `${Date.now()}-${Math.random()}`, cmd, out }]), []);
+
+  const lose = useCallback(() => {
+    setDuel(null);
+    setValue('');
+    sfx.error();
+    push('duel', <p className="t-err">Sensei finished first. Type duel to run it back.</p>);
+  }, [push]);
+
   const onKeyDown = (e) => {
-    if (e.key === 'Escape') { e.preventDefault(); onClose(); return; }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      if (duel) { setDuel(null); setValue(''); push('duel', <p className="t-dim">You forfeited the duel.</p>); } else onClose();
+      return;
+    }
+    if (duel && e.key === 'Enter') {
+      e.preventDefault();
+      if (Date.now() < duel.start) return;
+      if (value === duel.target) {
+        const secs = (Date.now() - duel.start) / 1000;
+        const wpm = Math.round((duel.target.length / 5) / (secs / 60));
+        setDuel(null);
+        setValue('');
+        sfx.select();
+        unlock('duel');
+        push('duel', <p>You beat Sensei in {secs.toFixed(1)}s, about {wpm} WPM.</p>);
+      } else {
+        sfx.error();
+      }
+      return;
+    }
     if (e.key === 'Enter') { run(value); setValue(''); return; }
     if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -254,6 +305,7 @@ export default function Terminal({ open, onClose, onGoto }) {
               {h.out}
             </div>
           ))}
+          {duel && <Duel duel={duel} value={value} onLose={lose} />}
         </div>
         <label className="term-input">
           <span className="t-prompt">{PROMPT}</span>

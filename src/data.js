@@ -121,21 +121,6 @@ export const PROJECTS = [
     host: 'midrollpro.com',
   },
   {
-    id: 'rankode',
-    name: 'Rankode',
-    kind: 'Personal project',
-    summary: 'Competitive ranked coding platform with live 1v1 duels.',
-    points: [
-      '10 subject tracks with Glicko-2 matchmaking',
-      'Sensei AI tutor and SCREEN mock interview prep',
-      'Judge0 sandbox and Socket.IO for the live code arena',
-      'Multi-platform: Electron, Expo and Next.js',
-    ],
-    stack: ['Electron', 'React', 'Vite', 'Fastify', 'Socket.IO', 'Judge0'],
-    url: 'https://rankode.app',
-    host: 'rankode.app',
-  },
-  {
     id: 'portico',
     name: 'Portico',
     kind: 'Personal project',

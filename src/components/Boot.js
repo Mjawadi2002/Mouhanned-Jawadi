@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, SpeakerHigh, SpeakerSlash } from '@phosphor-icons/react';
 import { sfx } from '../sfx';
+import { PROJECTS } from '../data';
 
 const LINES = [
   ['mount', '/education', 'ENSIT, Computer Engineering'],
   ['load', '/experience', 'ETG, CAEI, Sagemcom, CPG'],
-  ['index', '/projects', '6 products built'],
+  ['index', '/projects', `${PROJECTS.length} products built`],
   ['link', '/skills', 'TypeScript, Python, FastAPI, RAG'],
   ['check', '/certifications', '5 credentials'],
   ['open', '/contact', 'ready'],
