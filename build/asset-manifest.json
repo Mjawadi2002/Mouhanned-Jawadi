@@ -1,14 +1,31 @@
 {
   "files": {
-    "main.css": "/static/css/main.12c561be.css",
-    "main.js": "/static/js/main.59a09602.js",
-    "static/media/Monochrome Ilustration Graffiti Logo (1).png": "/static/media/Monochrome Ilustration Graffiti Logo (1).39d2723548f5160a6e0e.png",
+    "main.css": "/static/css/main.94c3d5eb.css",
+    "main.js": "/static/js/main.257b407b.js",
+    "static/media/profileimage.png": "/static/media/profileimage.22d81c678b65382228cf.png",
+    "static/media/tawelti.jpg": "/static/media/tawelti.d54c386f041e2029a064.jpg",
+    "static/media/personel.jpg": "/static/media/personel.0aceffacbd2d32dc8a26.jpg",
+    "static/media/midrollpro.jpg": "/static/media/midrollpro.7fd0697497257e65be00.jpg",
+    "static/media/teamyy.jpg": "/static/media/teamyy.40dcb7dec460c86b3d42.jpg",
+    "static/media/saleside.jpg": "/static/media/saleside.da910d89016092e99827.jpg",
+    "static/media/portico.jpg": "/static/media/portico.6a0397d052c396c75b6e.jpg",
+    "static/media/geist-latin-wght-normal.woff2": "/static/media/geist-latin-wght-normal.ee5d167b615cdb197f4a.woff2",
+    "static/media/geist-mono-latin-wght-normal.woff2": "/static/media/geist-mono-latin-wght-normal.8915f32bc9d51b44d11a.woff2",
+    "static/media/geist-latin-ext-wght-normal.woff2": "/static/media/geist-latin-ext-wght-normal.b29dbc4234e76289a5b9.woff2",
+    "static/media/geist-cyrillic-wght-normal.woff2": "/static/media/geist-cyrillic-wght-normal.e1e85cd9eab54096528f.woff2",
+    "static/media/geist-mono-latin-ext-wght-normal.woff2": "/static/media/geist-mono-latin-ext-wght-normal.62a3bc4f669903381d47.woff2",
+    "static/media/geist-mono-cyrillic-wght-normal.woff2": "/static/media/geist-mono-cyrillic-wght-normal.3f8363306daa9a51bc69.woff2",
+    "static/media/geist-vietnamese-wght-normal.woff2": "/static/media/geist-vietnamese-wght-normal.ed8ddc5c3f2df573fa57.woff2",
+    "static/media/geist-mono-vietnamese-wght-normal.woff2": "/static/media/geist-mono-vietnamese-wght-normal.7da6d79fa235f24f2930.woff2",
+    "static/media/geist-cyrillic-ext-wght-normal.woff2": "/static/media/geist-cyrillic-ext-wght-normal.141916beb91c487496c8.woff2",
+    "static/media/geist-mono-cyrillic-ext-wght-normal.woff2": "/static/media/geist-mono-cyrillic-ext-wght-normal.69fc1fa0544d8241186e.woff2",
+    "static/media/geist-mono-symbols2-wght-normal.woff2": "/static/media/geist-mono-symbols2-wght-normal.2d848fc9308af046051c.woff2",
     "index.html": "/index.html",
-    "main.12c561be.css.map": "/static/css/main.12c561be.css.map",
-    "main.59a09602.js.map": "/static/js/main.59a09602.js.map"
+    "main.94c3d5eb.css.map": "/static/css/main.94c3d5eb.css.map",
+    "main.257b407b.js.map": "/static/js/main.257b407b.js.map"
   },
   "entrypoints": [
-    "static/css/main.12c561be.css",
-    "static/js/main.59a09602.js"
+    "static/css/main.94c3d5eb.css",
+    "static/js/main.257b407b.js"
   ]
 }

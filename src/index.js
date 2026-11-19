@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
 import './index.css';
 import App from './App';
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -10,5 +11,3 @@ root.render(
     <App />
   </React.StrictMode>
 );
-
-
